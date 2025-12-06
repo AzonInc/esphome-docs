@@ -352,6 +352,34 @@ on_...:
 
 - **tag** (**Required**, [templatable](/automations/templates), string): The id of the scanned tag
 
+### `api.disconnect_clients` Action
+
+This action requests all connected API clients (such as Home Assistant) to disconnect. This is essential when you dynamically modify entity configurations at runtime, ensuring clients receive the updated entity states and visibility settings.
+
+```yaml
+button:
+  - platform: template
+    id: test_btn
+    name: Test
+    on_press:
+      - logger.log: "Button pressed"
+
+  - platform: template
+    id: set_internal
+    name: Set Test Button internal
+    on_press:
+      # Mark the Test button as internal (hidden from API clients)
+      - lambda: |-
+          id(test_btn)->set_internal(true);
+
+      # Force clients to disconnect to refresh their entity list
+      - api.disconnect_clients:
+```
+
+#### Configuration variables
+
+- **tag** (**Required**, [templatable](/automations/templates), string): The id of the scanned tag
+
 ## Triggers
 
 {{< anchor "api-on_client_connected_trigger" >}}
